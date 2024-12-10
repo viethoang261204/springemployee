@@ -6,6 +6,7 @@ import com.example.vidu3.service.EmployeeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,13 +37,13 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteEmployee(@PathVariable("id") long id) {
+    public void deleteEmployee(@PathVariable("id") long id) throws Exception {
         employeeService.deleteEmployee(id);
     }
 
     @GetMapping("/list")
-    public List<Employee> getAllEmployee() {
-        return employeeService.getAllEmployees();
+    public Page<Employee> getAllEmployee() {
+        return employeeService.getAllEmployees(3,5);
     }
 
     @GetMapping("/listjdbc")

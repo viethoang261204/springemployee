@@ -4,10 +4,8 @@ import com.example.vidu3.model.Employee;
 import com.example.vidu3.respository.EmployeeJdbcRepository;
 import com.example.vidu3.respository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -15,7 +13,6 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 @Service
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
@@ -25,18 +22,9 @@ public class EmployeeService {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final ModelMapper modelMapper;
 
     private final EmployeeJdbcRepository employeeJdbcRepository;
 
-    public EmployeeService(EmployeeRepository employeeRepository, JdbcTemplate jdbcTemplate, EmployeeJdbcRepository employeeJdbcRepository) {
-        this.employeeRepository = employeeRepository;
-        this.jdbcTemplate = jdbcTemplate;
-        this.employeeJdbcRepository = employeeJdbcRepository;
-        this.modelMapper = new ModelMapper();
-        this.modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
-
-    }
 
     // todo(Done) : kiểm tra trùng tên ( Check valid ở controller )
     // add Employee
@@ -57,6 +45,7 @@ public class EmployeeService {
         }
 
         Employee newEmployee = optionalEmployee.get();
+        ModelMapper modelMapper = new ModelMapper();
         modelMapper.map(employee, newEmployee);
 
         return employeeRepository.save(newEmployee);
@@ -71,11 +60,11 @@ public class EmployeeService {
            employeeRepository.deleteById(id);
     }
 
-    // Lấy toàn bộ danh sách nhân viên bang JPA
+    // Lấy toàn bộ danh sách nhân viên
     // todo(Done): xu ly phan trang
-    public List<Employee> getAllEmployees(int page, int size, String sortBy) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
-        return employeeRepository.findAll();
+    public Page<Employee> getAllEmployees(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return employeeRepository.findAll(pageable);
     }
 
     //Lấy toàn bộ danh sách nhân viên bằng JDBC
