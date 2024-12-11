@@ -22,7 +22,6 @@ public class EmployeeService {
 
     private final JdbcTemplate jdbcTemplate;
 
-
     private final EmployeeJdbcRepository employeeJdbcRepository;
 
 
@@ -46,6 +45,7 @@ public class EmployeeService {
 
         Employee newEmployee = optionalEmployee.get();
         ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setSkipNullEnabled(true);
         modelMapper.map(employee, newEmployee);
 
         return employeeRepository.save(newEmployee);
@@ -78,5 +78,15 @@ public class EmployeeService {
         return employeeJdbcRepository.countEmployees();
     }
 
-    // todo: Thuc hien truy vna phuc tap su dung Native query
+    //Tim luong theo departmentID
+    public List<Employee> findHighSalaryEmployees(double salary, Long departmentId) {
+        return employeeRepository.findHighSalaryEmployeesInDepartment(salary, departmentId);
+    }
+
+    public List<Employee> searchEmployees(String name, Double minSalary, Long departmentId) {
+        return employeeRepository.searchEmployees(name, minSalary, departmentId);
+    }
+
+
+    // todo(Done): Thuc hien truy vna phuc tap su dung Native query
 }

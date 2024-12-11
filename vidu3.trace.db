@@ -501,3 +501,9 @@ org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "salary    " not found [42122-23
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
 	at java.base/java.lang.Thread.run(Thread.java:1570)
+2024-12-11 07:12:09.632916+07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EMPLOYEES" not found; SQL statement:
+SELECT * FROM employees WHERE salary > ? AND department_id = ? [42102-232]
+2024-12-11 07:16:54.762807+07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EMPLOYEES" not found; SQL statement:
+SELECT * FROM employees WHERE (? IS NULL OR name LIKE ?) AND (? IS NULL OR salary >= ?) AND (? IS NULL OR department_id = ?) [42102-232]
