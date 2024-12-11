@@ -1,9 +1,11 @@
 package com.example.vidu3.service;
 
 import com.example.vidu3.model.Employee;
+import com.example.vidu3.model.EmployeePageDTO;
 import com.example.vidu3.respository.EmployeeJdbcRepository;
 import com.example.vidu3.respository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.validator.internal.constraintvalidators.bv.notempty.NotEmptyValidatorForArraysOfBoolean;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,7 +25,6 @@ public class EmployeeService {
     private final JdbcTemplate jdbcTemplate;
 
     private final EmployeeJdbcRepository employeeJdbcRepository;
-
 
     // todo(Done) : kiểm tra trùng tên ( Check valid ở controller )
     // add Employee
@@ -62,9 +63,15 @@ public class EmployeeService {
 
     // Lấy toàn bộ danh sách nhân viên
     // todo(Done): xu ly phan trang
-    public Page<Employee> getAllEmployees(int page, int size) {
+    public EmployeePageDTO getAllEmployees(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return employeeRepository.findAll(pageable);
+        Page<Employee> employeePage =  employeeRepository.findAll(pageable);
+
+        List<Employee> employeeList = employeePage.getContent();
+        long totalrecords = employeePage.getTotalElements();
+        int totalpages = employeePage.getTotalPages();
+
+        return new EmployeePageDTO(employeeList,totalrecords,totalpages);
     }
 
     //Lấy toàn bộ danh sách nhân viên bằng JDBC
@@ -83,8 +90,8 @@ public class EmployeeService {
         return employeeRepository.findHighSalaryEmployeesInDepartment(salary, departmentId);
     }
 
-    public List<Employee> searchEmployees(String name, Double minSalary, Long departmentId) {
-        return employeeRepository.searchEmployees(name, minSalary, departmentId);
+    public List<Employee> searchEmployees(String name, Double minSalary, Long departmentId , Integer age , Double height , String phone , Double weight) {
+        return employeeRepository.searchEmployees(name, minSalary, departmentId,age,height,phone,weight);
     }
 
 

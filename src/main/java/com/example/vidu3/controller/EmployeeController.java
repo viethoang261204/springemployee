@@ -2,6 +2,7 @@ package com.example.vidu3.controller;
 
 
 import com.example.vidu3.model.Employee;
+import com.example.vidu3.model.EmployeePageDTO;
 import com.example.vidu3.service.EmployeeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,8 +44,8 @@ public class EmployeeController {
     }
 
     @GetMapping("/list")
-    public Page<Employee> getAllEmployee() {
-        return employeeService.getAllEmployees(3,5);
+    public EmployeePageDTO getAllEmployee(@RequestParam("page") int page, @RequestParam("size") int size) {
+        return employeeService.getAllEmployees(page,size);
     }
 
     @GetMapping("/listjdbc")
@@ -70,10 +71,15 @@ public class EmployeeController {
     public ResponseEntity<List<Employee>> searchEmployees(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Double minSalary,
-            @RequestParam(required = false) Long departmentId) {
-        List<Employee> employees = employeeService.searchEmployees(name, minSalary, departmentId);
+            @RequestParam(required = false) Long departmentId,
+            @RequestParam(required = false) Integer age,
+            @RequestParam(required = false) Double height,
+            @RequestParam(required = false) String phone,
+            @RequestParam(required = false) Double weight) {
+        List<Employee> employees = employeeService.searchEmployees(name, minSalary, departmentId,age,height,phone,weight);
         return ResponseEntity.ok(employees);
     }
-    // todo : Them validate . 2 rang buoc DB + Code
+
+    // todo(Done) : Them validate . 2 rang buoc DB + Code
     // todo: Them ham search theo nhieu dieu kien khac nhau , co phan trang ,tim hieu ve Caching ( bo nho dem ) , Spring cache
 }
