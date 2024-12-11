@@ -26,9 +26,13 @@ public class EmployeeService {
 
     private final EmployeeJdbcRepository employeeJdbcRepository;
 
-    // todo(Done) : kiểm tra trùng tên ( Check valid ở controller )
+    // todo(Done) : kiểm tra trùng tên
     // add Employee
     public Employee addEmployee(Employee employee) {
+        Optional<Employee> existingEmployee = employeeRepository.findByName(employee.getName());
+        if (existingEmployee.isPresent()) {
+            throw new RuntimeException("Employee with this name already exists.");
+        }
         return employeeRepository.save(employee);
     }
 

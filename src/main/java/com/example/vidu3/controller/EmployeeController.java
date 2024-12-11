@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -39,9 +40,15 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteEmployee(@PathVariable("id") long id) throws Exception {
-        employeeService.deleteEmployee(id);
+    public ResponseEntity<String> deleteEmployee(@PathVariable("id") long id) {
+        try {
+            employeeService.deleteEmployee(id);
+            return ResponseEntity.ok("Delete Successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred: " + e.getMessage());
+        }
     }
+
 
     @GetMapping("/list")
     public EmployeePageDTO getAllEmployee(@RequestParam("page") int page, @RequestParam("size") int size) {
